@@ -1,0 +1,99 @@
+
+
+<template>
+    <!-- Patient Search Card -->
+    <lightning-card>
+        <h3 slot="title">
+            <lightning-icon icon-name="standard:search" size="small"></lightning-icon>&nbsp; <b>Patient Search</b>
+        </h3>
+
+        <!-- Error section -->
+        <lightning-layout multiple-rows="true"  class="slds-border_bottom">
+            <div if:true={showError} class="slds-size_12-of-12 slds-p-right_medium slds-p-left_medium">
+                <lightning-layout-item size="12" padding="around-small">
+                    <div class="slds-box slds-notify slds-theme_error">
+                        <div class="slds-notify__content">
+                            <h5 class="slds-text-heading_small">Review the errors on this page.</h5>           
+                        </div>  
+                    </div>
+                    <p class="slds-p-around_medium slds-border_bottom slds-text-color_error">{errorMessage}</p>
+                </lightning-layout-item>
+            </div>
+            <!-- Input section -->
+            <lightning-layout-item padding="around-small" size="12">
+                <lightning-layout horizontal-align="space"> 
+                    <lightning-layout-item size="3" padding="around-small">
+                        <lightning-input label="First Name" data-id="patientFirstName" class="valInput" value={AHC_PatientSearchParameterWrapper.firstName} onchange={handleFirstName}></lightning-input>
+                        <lightning-input label="Last Name" class="valInput" value={AHC_PatientSearchParameterWrapper.lastName} onchange={handleLastName}></lightning-input>
+                        <lightning-input type="text" label="Date of Birth (MMDDYYYY)" class="valInput" 
+                            value={AHC_PatientSearchParameterWrapper.dob} onchange={handleDob} 
+                            message-when-pattern-mismatch="The date entered does not match the format MM/DD/YYYY" 
+                            pattern="(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)\d\d" max-length="10">
+                        </lightning-input>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="3" padding="around-small">
+                        <lightning-input type="tel" label="Phone" class="valInput" value={AHC_PatientSearchParameterWrapper.phone} onchange={handlePhone}></lightning-input>
+                        <lightning-input type="email" label="Email" class="valInput" value={AHC_PatientSearchParameterWrapper.email} onchange={handleEmail}></lightning-input>
+                        <lightning-input label="Zip Code" class="valInput" value={AHC_PatientSearchParameterWrapper.zipCode} onchange={handleZipCode}></lightning-input>
+                    </lightning-layout-item>
+                </lightning-layout>
+            </lightning-layout-item>
+            
+        </lightning-layout>
+        <br />
+		<div class="slds-align_absolute-center">
+            <lightning-button label="Reset" class="slds-p-right_xx-small" onclick={handleReset}></lightning-button>
+            <lightning-button variant="brand" label="Search" disabled={disableSearch} onclick={handleClick}></lightning-button>
+        </div>
+    </lightning-card>
+    
+    <!-- Display results -->
+    <div if:true={searchCard} class="slds-p-top_x-small">
+        <div class="exampleHolder">
+
+
+        <lightning-card>
+            <h3 slot="title" class="slds-p-vertical_xx-small">
+                <div if:true={resultType}>
+                    <lightning-icon icon-name="standard:contact" size="small"></lightning-icon>&nbsp;<b>Redacted Network Searched Results</b>
+                </div>
+                <div if:false={resultType}>
+                    <lightning-icon icon-name="standard:contact" size="small"></lightning-icon>&nbsp;<b>Searched Results</b>
+                </div>
+            </h3>
+            <div if:true={displayTable}>
+
+                <!--<template if:true={showSpinner}>-->
+                    <div if:true={showSpinner} class="slds-spinner_inline spinner-padding">
+                        <lightning-spinner variant="brand" alternative-text="Loading" size="medium"></lightning-spinner>
+                    </div>
+                <!--</template>-->
+
+
+                <lightning-datatable 
+                        key-field="id" 
+                        data={accountListOnPage} 
+                        columns={columns} 
+                        onrowaction={handlePatientRecord}
+                        column-widths-mode = "auto"
+                        hide-checkbox-column>
+                </lightning-datatable>
+                <footer class="slds-p-top_medium slds-p-bottom_small slds-align_absolute-center">
+                    <div if:true={enablePaginagtion}>
+                        <lightning-button label="Previous" variant="brand" disabled={disablePrev} class="slds-p-right_xx-small" onclick={handlePrevious} ></lightning-button>
+                        <label class="slds-p-right_xx-small" >Page {pageNumber} of {accountWrapperObject.totalPages} </label>
+                        <lightning-button label="Next" variant="brand" disabled={disableNext} onclick={handleNext}  class="slds-p-right_xx-small"></lightning-button>
+                    </div>
+                </footer>
+            </div>
+            <div if:false={displayTable}>
+                <div class="slds-p-bottom_medium slds-text-align_center">No Patients Found.</div>
+            </div>
+            <footer class="slds-p-bottom_small slds-align_absolute-center">
+                <lightning-button label="Search Redacted Network" variant="brand" disabled={disableExternalSearch} onclick={handleExternalSearch} ></lightning-button>
+            </footer>
+        </lightning-card>
+        </div>
+    </div>
+
+</template>

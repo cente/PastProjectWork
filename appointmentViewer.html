@@ -1,0 +1,51 @@
+<template>
+  <lightning-card title="Appointments" icon-name="utility:date_input">
+    <template if:true={showNoAppointmentsMsg}>
+        <p style="text-align: center; font-weight:bold; color:#34446e"><b>{error}</b></p>
+    </template>
+    <template if:false={showNoAppointmentsMsg}>
+      <lightning-datatable
+              data={dataMain}
+              columns={columns}
+              key-field="id"    
+              hide-checkbox-column>
+      </lightning-datatable>
+    </template>
+
+    <!--Button to launch a view for all appointments-->
+    <template if:true={showViewAllButton}>
+      <p style="text-align: center;">
+        <lightning-button variant="brand" label="View all" title="View all" onclick={handleAllRecords} class="slds-m-left_x-small"></lightning-button>
+      </p>
+    </template>
+
+    <!--Complete list of appointments: appears as popup when the relevant View button is clicked-->
+    <template if:true={modalContainer}>
+      <section class="slds-modal slds-fade-in-open">
+          <div class="slds-modal__container">
+              <header class="slds-modal__header">
+                  <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModalAction}>
+                    <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse" size="small" ></lightning-icon>
+                  </button>
+                  <h2 class="slds-text-heading_medium slds-hyphenate">Appointments</h2>
+              </header>
+              <div class="slds-modal__content slds-p-around_medium">
+                  <lightning-datatable
+                    data={data}
+                    columns={columns}
+                    key-field="id"    
+                    hide-checkbox-column>
+                  </lightning-datatable>
+              </div>
+              <footer class="slds-modal__footer">
+                  <lightning-button variant="brand" label="Close" title="Close"  onclick={closeModalAction}></lightning-button>
+              </footer> 
+          </div>
+      </section>
+      <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+  <!--<c-appointment-viewer-child></c-appointment-viewer-child>-->
+
+  </lightning-card>
+</template>
