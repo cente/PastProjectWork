@@ -26,7 +26,7 @@ logger.addHandler(handler)
 todaytimestamp = int(datetime.now().timestamp() * 1000)
 
 def check_postgres():
-    src = PostgresHook(postgres_conn_id="dw03", schema="shipstation");
+    src = PostgresHook(postgres_conn_id="dw03", schema="redacted");
     src_conn = src.get_conn()
     cursor = src_conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
     cursor.execute(sql)
